@@ -109,6 +109,14 @@ def add_news(inicio: int):
     update_articles(new_articles, website_id=100)
     return new_articles
 
+def get_new_news(new_articles):
+    with Session() as session:
+        session.execute(text(
+            "CREATE temp TABLE IF NOT EXISTS article_temp_table (LIKE article_table INCLUDING ALL);"))
+        session.execute(text(
+            """INSERT INTO article_temp_table (title, url, website_id, web_data) VALUES(:title, :url, :website_id, :web_data)"""
+        ))
+
 
 def update_articles(new_articles, website_id):
     with Session() as session:
@@ -154,3 +162,40 @@ def update_articles(new_articles, website_id):
         session.execute(text("DROP TABLE IF EXISTS article_temp_table;"))
         session.commit()
         return True
+
+
+from fastapi import Request, Form
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("news_list.html", {
+        "request": request,
+        "lista": []
+    })
+
+@app.post("/", response_class=HTMLResponse)
+async def home(request: Request, num :int = Form(...)):
+    with Session() as session:
+        website_list = session.scalars(select(WebSite)).all()
+        website = WebSiteDb.get_element_with_filter(
+            session, Filter(column="id", value=num)
+            )
+        if (website is not None):
+            articles = ArticleDb.get_all_elements_with_filter(session, Filter(column="website_id", value=website.id))
+            lista = articles
+        else:
+            lista= []
+    return templates.TemplateResponse("news_list.html", {
+        "request": request,
+        "num": num,
+        "website_list": website_list,
+        "lista":lista
+    })

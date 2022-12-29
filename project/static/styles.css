@@ -1,0 +1,124 @@
+body {
+  position: relative;
+  margin: 1px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#header {
+  line-height: 100px;
+  padding-left: 30px;
+  color: white;
+  width: 100%;
+  height: 100px;
+  border-radius: 0px 0px 0px 50px;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#282887));
+}
+
+#header h2{
+  margin: 0;
+}
+
+#footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#282887));
+}
+
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#mainblock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 800px;
+}
+
+#websitescontainer {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-left: solid 1px #828282;
+  border-right: solid 1px #828282;
+  box-sizing: border-box;
+  height: 400px;
+  width: 600px;
+  padding: 10px 20px 10px 20px;
+  overflow-y: auto;
+}
+
+.websiteItem {
+  position: relative;
+  border: 1px dashed black;
+  margin: 5px 0px 5px 0px;
+  width: calc(100% - 40px - 2px);
+  height: 30%;
+  padding: 10px 10px 10px 30px;
+  border-radius: 5px 5px 5px 30px;
+  display: flex;
+  align-items: center;
+}
+
+.websiteItem a{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#link-api{
+  width: 85%;
+}
+
+#link-page {
+  border: solid 1px;
+  width: 15%;
+  height: 100%;
+  border: 1px solid gray;
+  border-radius: 5px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+#link-page img{
+  width: 50%;
+}
+
+.websiteItem img,
+h3 {
+    position: relative;
+    display: inline-block;
+}
+
+.websiteItem 
+h3 {
+  position: relative;
+  margin-left: 5%;
+}
+
+.websiteItem 
+img {
+   width: 9%;
+}
+
+#bottom-all{
+  position: relative;
+  border: 1px solid gray;
+  height: 40px;
+  width: 150px;
+  margin: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
