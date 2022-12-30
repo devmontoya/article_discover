@@ -26,6 +26,5 @@ function optionFunc(a){
   window.location.href = "news_view.html";
 }
 
-//<a href=${input[chan]["url"]} id="link-api" target="_blank" rel="nofollow">
 load_pages();
 

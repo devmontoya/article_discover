@@ -103,12 +103,12 @@ h3 {
   height: 50px;
 }
 
-.websiteItem 
+.websiteItem
 h3 {
   position: relative;
   margin-left: 5%;
 }
- 
+
 .websiteItem .web-icon {
    width: 9%;
 }
@@ -124,4 +124,3 @@ h3 {
   align-items: center;
   border-radius: 5px;
 }
-
