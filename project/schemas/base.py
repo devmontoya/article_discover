@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 class NewWebSite(BaseModel):
     gen_id: int = Field(default=1)
-    url: str = Field(max_length=60)
+    url: str = Field(max_length=100)
 
 
 class WebSite_schema(BaseModel):

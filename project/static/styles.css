@@ -113,12 +113,19 @@ h3 {
    width: 9%;
 }
 
-#button-loadweb{
+#div-loadwebsites {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#div-loadwebsites button{
   position: relative;
   border: 1px solid gray;
-  height: 40px;
-  width: 150px;
-  margin-top: 40px;
+  height: 50px;
+  width: 200px;
+  margin: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,8 +135,8 @@ h3 {
 #button-all{
   position: relative;
   border: 1px solid gray;
-  height: 40px;
-  width: 150px;
+  height: 50px;
+  width: 200px;
   margin: 40px;
   display: flex;
   justify-content: center;

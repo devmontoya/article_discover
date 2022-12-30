@@ -33,8 +33,12 @@ function optionFunc(a){
 async function fetch_from_API(){
   const data = await fetch('web_site/get_websites_list')
     .then((response) => response.json());
-  console.log(`the data is ${data[0]["url"]}`);
+  load_pages(data);
+}
+
+function fetch_demo(){
+  load_pages(demo_input);
 }
 
 load_pages(demo_input);
-fetch_from_API();
+// fetch_from_API();

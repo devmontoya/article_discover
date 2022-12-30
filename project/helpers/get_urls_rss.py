@@ -35,6 +35,16 @@ def get_news_rss(url: str):
     else:
         raise Exception("no tiene ninguna de las keys disponibles")
 
+    published_str = "published"
+    if (entries[0]).has_key("published"):
+        pass
+    elif (entries[0]).has_key("updated"):
+        published_str = "updated"
+    elif (entries[0]).has_key("pubDate"):
+        published_str = "pubDate"
+    else:
+        published_str = None
+
     # if isinstance(entries[0][content_str], str):
     #    data.update({'entries': [{'title': entri['title'], 'link': entri['link'], "published": entri['published'], 'content': remove_tags(entri[content_str])} for entri in entries]})
     # elif isinstance(entries[0][content_str], list):
@@ -46,11 +56,7 @@ def get_news_rss(url: str):
                 {
                     "title": entri["title"],
                     "link": entri["link"],
-                    "published": (
-                        entri["published"]
-                        if entri.has_key("publised")
-                        else (entri["updated"] if entri.has_key("updated") else None)
-                    ),
+                    "published": entri[published_str],
                     "content": 0,
                 }
                 for entri in entries
