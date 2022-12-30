@@ -51,7 +51,10 @@ async def pass_website(website: NewWebSite):
             is None
         ):
             new_website = WebSite(
-                name=title_feed, url=website_info["link"], url_feed=website.url
+                name=title_feed,
+                url=website_info["link"],
+                url_feed=website.url,
+                image_url=website_info["image_url"],
             )
             session.add(new_website)
             session.flush()

@@ -113,6 +113,18 @@ h3 {
    width: 9%;
 }
 
+#button-loadweb{
+  position: relative;
+  border: 1px solid gray;
+  height: 40px;
+  width: 150px;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
 #button-all{
   position: relative;
   border: 1px solid gray;

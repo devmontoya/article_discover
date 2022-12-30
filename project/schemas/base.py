@@ -11,6 +11,7 @@ class WebSite_schema(BaseModel):
     name: str
     url: str
     url_feed: str
+    image_url: str | None
 
 
 class Article_schema(BaseModel):

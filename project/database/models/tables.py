@@ -1,3 +1,5 @@
+from typing import Optional
+
 from database.base_connection import Base
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,9 +17,10 @@ class User(Base):
 class WebSite(Base):
     __tablename__ = "website_table"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(30))
+    name: Mapped[str] = mapped_column(String(50))
     url: Mapped[str] = mapped_column(String(50))
-    url_feed: Mapped[str] = mapped_column(String(50))
+    url_feed: Mapped[str] = mapped_column(String(100))
+    image_url: Mapped[Optional[str]] = mapped_column(String(100))
 
     # articles: Mapped[list["Article"]] = relationship("article_table", cascade="all, delete")
     # clients: Mapped[list["ClientChannel"]] = relationship(back_populates="channel")

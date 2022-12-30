@@ -20,6 +20,7 @@ def get_news_rss(url: str):
         "title_feed": channel["title"],
         "language": (channel["language"] if channel.has_key("language") else None),
         "link": channel["link"],
+        "image_url": (channel["image"]["url"] if channel.has_key("image") else None),
     }
 
     content_str = "content"
@@ -45,7 +46,11 @@ def get_news_rss(url: str):
                 {
                     "title": entri["title"],
                     "link": entri["link"],
-                    "published": entri["published"],
+                    "published": (
+                        entri["published"]
+                        if entri.has_key("publised")
+                        else (entri["updated"] if entri.has_key("updated") else None)
+                    ),
                     "content": 0,
                 }
                 for entri in entries
