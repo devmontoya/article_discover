@@ -4,6 +4,7 @@ from database.db_service import ArticleDb, UserDb, WebSite, WebSiteDb
 from database.models.tables import Article, User, WebSite
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from helpers.get_article import get_text_article
 from helpers.get_urls_rss import get_news_rss
 from schemas.base import Article_schema_noid, Filter, NewWebSite, WebSite_schema
@@ -13,6 +14,19 @@ create_metadata()
 
 app = FastAPI()
 
+origins = [
+    "http://localhost",
+    "http://localhost:8000"
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/healthcheck")
 def healthcheck():
@@ -174,15 +188,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
+# @app.get("/", response_class=HTMLResponse)
+# async def home(request: Request):
+#     return templates.TemplateResponse("news_list.html", {
+#         "request": request,
+#         "lista": []
+#     })
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("news_list.html", {
-        "request": request,
-        "lista": []
-    })
-
-@app.post("/", response_class=HTMLResponse)
-async def home(request: Request, num :int = Form(...)):
+    num = 2
     with Session() as session:
         website_list = session.scalars(select(WebSite)).all()
         website = WebSiteDb.get_element_with_filter(
@@ -193,9 +208,15 @@ async def home(request: Request, num :int = Form(...)):
             lista = articles
         else:
             lista= []
-    return templates.TemplateResponse("news_list.html", {
+    return templates.TemplateResponse("invited_user_view.html", {
         "request": request,
         "num": num,
         "website_list": website_list,
         "lista":lista
+    })
+
+@app.get("/news_view.html", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("news_view.html", {
+        "request": request,
     })

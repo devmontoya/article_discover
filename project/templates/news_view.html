@@ -1,0 +1,28 @@
+{% extends 'layout_base.html' %}
+
+{% block header %}
+<h2>News View</h2>
+{% endblock %}
+
+{% block content %}
+<div id="container">
+	<div id="mainblock">
+		<div id="maintext">
+			<h3>Choose an Option</h3>
+			<p>Click a website to see the last articles from that website of your interest or see all websites registered in
+				the server currently</p>
+		</div>
+		<div id="websitescontainer">
+			<div id="websitesL"></div>
+		</div>
+		<button type="submit" id="button-all">
+			<h4>See all</h4>
+		</button>
+	</div>
+</div>
+
+<script>
+	let valueload = localStorage.getItem('option_chosen');
+	console.log(`se carga ${valueload}`)
+</script>
+{% endblock content %}
