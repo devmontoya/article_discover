@@ -219,7 +219,7 @@ async def home(request: Request):
 
 
 @app.get("/news_view.html", response_class=HTMLResponse)
-async def home(request: Request):
+async def news_view(request: Request):
     return templates.TemplateResponse(
         "news_view.html",
         {
