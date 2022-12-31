@@ -31,7 +31,7 @@ function optionFunc(a){
 }
 
 async function fetch_from_API(){
-  const data = await fetch('web_site/get_websites_list')
+  const data = await fetch('api/get_websites_list')
     .then((response) => response.json());
   load_pages(data);
 }
