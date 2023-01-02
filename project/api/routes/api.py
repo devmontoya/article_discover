@@ -1,11 +1,11 @@
+from database.base_connection import Session
+from database.db_service import WebSiteDb
+from database.models.tables import Article, WebSite
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from helpers.get_article import get_text_article
 from helpers.get_urls_rss import get_news_rss
 from schemas.base import Article_schema_noid, Filter, NewWebSite
-from database.base_connection import Session
-from database.db_service import WebSiteDb
-from database.models.tables import Article, WebSite
 from sqlalchemy import select, text
 
 api_router = APIRouter()
@@ -64,6 +64,22 @@ async def get_websites_list():
     return websites
 
 
+@api_router.get("/get_news_list/{website_id}")
+async def get_news_list(website_id: int):
+    with Session() as session:
+        website = WebSiteDb.get_element_by_id(session, website_id)
+        articles = website.articles
+    return [
+        {
+            "Title": art.title,
+            "url": art.url,
+            "published": art.published,
+            "data": art.web_data,
+        }
+        for art in articles
+    ]
+
+
 @api_router.post("/update_sites")
 async def update_sites():
     with Session() as session:
@@ -80,6 +96,7 @@ async def update_sites():
                     Article_schema_noid(
                         title=new["title"],
                         url=url,
+                        published=new["published"],
                         website_id=website_id,
                         web_data=content,
                     ).dict()
@@ -114,7 +131,7 @@ def get_new_news(new_articles):
         )
         session.execute(
             text(
-                """INSERT INTO article_temp_table (title, url, website_id, web_data) VALUES(:title, :url, :website_id, :web_data)"""
+                """INSERT INTO article_temp_table (title, url, published, website_id, web_data) VALUES(:title, :url, :published, :website_id, :web_data)"""
             )
         )
 
@@ -128,7 +145,7 @@ def update_articles(new_articles, website_id):
         session.execute(statement_temp_table)
 
         statement_insert = text(
-            """INSERT INTO article_temp_table (title, url, website_id, web_data) VALUES(:title, :url, :website_id, :web_data)"""
+            """INSERT INTO article_temp_table (title, url, published, website_id, web_data) VALUES(:title, :url, :published, :website_id, :web_data)"""
         )
 
         for new_art in new_articles:

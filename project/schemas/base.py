@@ -18,6 +18,7 @@ class Article_schema(BaseModel):
     id: int | None
     title: str
     url: str
+    published: str | None
     website_id: int | None
     web_data: str
 
@@ -25,6 +26,7 @@ class Article_schema(BaseModel):
 class Article_schema_noid(BaseModel):
     title: str
     url: str
+    published: str | None
     website_id: int | None
     web_data: str
 

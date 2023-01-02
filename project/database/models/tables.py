@@ -22,7 +22,7 @@ class WebSite(Base):
     url_feed: Mapped[str] = mapped_column(String(100))
     image_url: Mapped[Optional[str]] = mapped_column(String(100))
 
-    # articles: Mapped[list["Article"]] = relationship("article_table", cascade="all, delete")
+    articles: Mapped[list["Article"]] = relationship()
     # clients: Mapped[list["ClientChannel"]] = relationship(back_populates="channel")
 
     def __repr__(self) -> str:
@@ -48,6 +48,7 @@ class Article(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(5000))
     url: Mapped[str] = mapped_column(String(5000))
+    published: Mapped[str] = mapped_column(String(100))
     website_id: Mapped[int] = mapped_column(ForeignKey("website_table.id"))
     web_data: Mapped[str] = mapped_column()
 
