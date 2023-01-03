@@ -124,14 +124,11 @@ def add_news(inicio: int):
 
 def get_new_news(new_articles):
     with Session() as session:
+        session.execute(text("DROP FROM article_temp_table;"))
         session.execute(
             text(
-                "CREATE temp TABLE IF NOT EXISTS article_temp_table (LIKE article_table INCLUDING ALL);"
-            )
-        )
-        session.execute(
-            text(
-                """INSERT INTO article_temp_table (title, url, published, website_id, web_data) VALUES(:title, :url, :published, :website_id, :web_data)"""
+                """INSERT INTO article_temp_table (title, url, published, website_id, web_data)
+                VALUES(:title, :url, :published, :website_id, :web_data)"""
             )
         )
 
@@ -139,13 +136,16 @@ def get_new_news(new_articles):
 def update_articles(new_articles, website_id):
     with Session() as session:
 
-        statement_temp_table = text(
-            "CREATE temp TABLE article_temp_table (LIKE article_table INCLUDING ALL);"
+        session.execute(
+            text(
+                """CREATE temp TABLE IF NOT EXISTS
+                article_temp_table (LIKE article_table INCLUDING ALL);"""
+            )
         )
-        session.execute(statement_temp_table)
 
         statement_insert = text(
-            """INSERT INTO article_temp_table (title, url, published, website_id, web_data) VALUES(:title, :url, :published, :website_id, :web_data)"""
+            """INSERT INTO article_temp_table (title, url, published, website_id, web_data)
+                VALUES(:title, :url, :published, :website_id, :web_data)"""
         )
 
         for new_art in new_articles:
@@ -153,26 +153,19 @@ def update_articles(new_articles, website_id):
 
         statement_updates = text(
             """delete
-                                        from
-                                        	article_table
-                                        where
-                                        	id in (
-                                        	select at2.id from article_temp_table att
-                                        	right join article_table at2 on
-                                        		att.url = at2.url
-                                        	where
-                                        		att.url is null and at2.website_id = :website_id);
-                                    insert
-                                    	into
-                                    	article_table (
-                                    	select
-                                    		att.*
-                                    	from
-                                    		article_temp_table att
-                                    	left join article_table at2 on
-                                    		att.url = at2.url
-                                    	where
-                                    		at2.url is null  and att.website_id = :website_id);"""
+                    from
+                    	article_table
+                    where
+                    	id in (
+                    	    select id
+                            from get_rowstodelete(:website_id));
+                insert
+                	into
+                	article_table (
+                	select
+                		*
+                	from
+                		get_rowstoupdate(:website_id));"""
         )
 
         session.execute(statement_updates, {"website_id": website_id})

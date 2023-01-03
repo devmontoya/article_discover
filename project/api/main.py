@@ -1,6 +1,6 @@
 # from config import settings
 from api.routes import api
-from database.base_connection import Session, create_metadata
+from database.base_connection import Session, create_metadata, init_database
 from database.db_service import ArticleDb, WebSiteDb
 from database.models.tables import WebSite
 from fastapi import FastAPI, Request
@@ -12,6 +12,8 @@ from schemas.base import Filter
 from sqlalchemy import select
 
 create_metadata()
+
+init_database()
 
 tags_metadata = [
     {
