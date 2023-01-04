@@ -38,24 +38,29 @@ async def add_new_website(website: NewWebSite):
             session.add(new_website)
             session.flush()
             new_articles = []
-            news = get_news_rss(website.url)["entries"]
-            for new in news[:5]:
+            articles = get_news_rss(website.url)["entries"]
+            for article in articles[:5]:
                 website_id = new_website.id
-                url = new["link"]
+                url = article["link"]
                 content = await get_text_article(url)
                 new_articles.append(
                     Article(
-                        title=new["title"],
-                        url=new["link"],
-                        website_id=new_website.id,
+                        title=article["title"],
+                        url=url,
+                        published=article["published"],
+                        website_id=website_id,
                         web_data=content,
                     )
                 )
             print(new_articles)
             session.add_all(new_articles)
             session.flush()
+            status = "Feed added"
+        else:
+            status = "This feed already exists"
+            articles = None
         session.commit()
-    return news
+    return {"status": status, "entries": articles}  # TODO add exception management
 
 
 @api_router.get("/get_websites_list")
