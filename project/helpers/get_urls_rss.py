@@ -38,10 +38,10 @@ def get_news_rss(url: str):
     published_str = "published"
     if (entries[0]).has_key("published"):
         pass
-    elif (entries[0]).has_key("updated"):
-        published_str = "updated"
     elif (entries[0]).has_key("pubDate"):
         published_str = "pubDate"
+    elif (entries[0]).has_key("updated"):
+        published_str = "updated"
     else:
         published_str = None
 
@@ -57,7 +57,7 @@ def get_news_rss(url: str):
                     "title": entri["title"],
                     "link": entri["link"],
                     "published": entri[published_str],
-                    "content": 0,
+                    "content": "",
                 }
                 for entri in entries
             ]

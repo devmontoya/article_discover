@@ -20,27 +20,12 @@ class WebSite(Base):
     name: Mapped[str] = mapped_column(String(50))
     url: Mapped[str] = mapped_column(String(50))
     url_feed: Mapped[str] = mapped_column(String(100))
-    image_url: Mapped[Optional[str]] = mapped_column(String(100))
+    image_url: Mapped[Optional[str]] = mapped_column(String(200))
 
     articles: Mapped[list["Article"]] = relationship()
-    # clients: Mapped[list["ClientChannel"]] = relationship(back_populates="channel")
 
     def __repr__(self) -> str:
         return f"WebSite(id={self.id!r}, name={self.name!r}, url={self.url!r}, url_feed={self.url_feed!r})"
-
-
-# class ClientChannel(Base):
-#     __tablename__ = "clientchannel_table"
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     client_id: Mapped[int] = mapped_column(ForeignKey("client_table.id"))
-#     channel_id: Mapped[int] = mapped_column(ForeignKey("channel_table.id"))
-#     last_id: Mapped[int] = mapped_column(default=0)
-
-#     client: Mapped["Client"] = relationship(back_populates="channels")
-#     channel: Mapped["Channel"] = relationship(back_populates="clients")
-
-#     def __repr__(self) -> str:
-#         return f"ClientChannel(id={self.id!r}, client_id={self.client_id!r}, channel_id={self.channel_id!r}, last_id={self.client_id!r})"
 
 
 class Article(Base):

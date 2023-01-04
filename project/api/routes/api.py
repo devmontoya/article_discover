@@ -4,6 +4,7 @@ from database.models.tables import Article, WebSite
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from helpers.get_article import get_text_article
+from helpers.get_new_news import get_new_articles_helper
 from helpers.get_urls_rss import get_news_rss
 from schemas.base import Article_schema_noid, Filter, NewWebSite
 from sqlalchemy import select, text
@@ -17,8 +18,8 @@ def get_news_website(website: NewWebSite):
     return news
 
 
-@api_router.post("/new_website")
-async def pass_website(website: NewWebSite):
+@api_router.post("/add_new_website")
+async def add_new_website(website: NewWebSite):
     website_info = get_news_rss(website.url)
     title_feed = website_info["title_feed"]
     with Session() as session:
@@ -87,16 +88,20 @@ async def update_sites():
         print(websites)
         for web in websites:
             result = []
-            news = get_news_rss(web.url_feed)["entries"]
-            for new in news[:5]:
+            articles = get_news_rss(web.url_feed)["entries"]
+            mask_articles = get_new_articles_helper(session, articles, web)
+            for i, article in enumerate(articles[:5]):
                 website_id = web.id
-                url = new["link"]
-                content = await get_text_article(url)
+                url = article["link"]
+                if mask_articles[i]:
+                    content = await get_text_article(url)
+                else:
+                    content = ""  # This content is not taken into account in the following steps
                 result.append(
                     Article_schema_noid(
-                        title=new["title"],
+                        title=article["title"],
                         url=url,
-                        published=new["published"],
+                        published=article["published"],
                         website_id=website_id,
                         web_data=content,
                     ).dict()
