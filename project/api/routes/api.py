@@ -1,8 +1,7 @@
 from database.base_connection import Session
 from database.db_service import WebSiteDb
 from database.models.tables import Article, WebSite
-from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException, status
 from helpers.get_article import get_text_article
 from helpers.get_new_news import get_new_articles_helper
 from helpers.get_urls_rss import get_news_rss
@@ -18,7 +17,7 @@ def get_news_website(website: NewWebSite):
     return news
 
 
-@api_router.post("/add_new_website")
+@api_router.post("/add_new_website", status_code=status.HTTP_201_CREATED)
 async def add_new_website(website: NewWebSite):
     website_info = get_news_rss(website.url)
     title_feed = website_info["title_feed"]
@@ -55,12 +54,13 @@ async def add_new_website(website: NewWebSite):
             print(new_articles)
             session.add_all(new_articles)
             session.flush()
-            status = "Feed added"
+            session.commit()
         else:
-            status = "This feed already exists"
-            articles = None
-        session.commit()
-    return {"status": status, "entries": articles}  # TODO add exception management
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT, detail="This feed already exists"
+            )
+
+    return articles
 
 
 @api_router.get("/get_websites_list")
@@ -74,6 +74,11 @@ async def get_websites_list():
 async def get_news_list(website_id: int):
     with Session() as session:
         website = WebSiteDb.get_element_by_id(session, website_id)
+        if website is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Website with {website_id} id no found",
+            )
         articles = website.articles
     return [
         {
@@ -114,33 +119,6 @@ async def update_sites():
 
             update_articles(result, website_id=website_id)
     return "True"
-
-
-@api_router.post("/tests/add_news")
-def add_news(inicio: int):
-    new_articles = [
-        Article_schema_noid(
-            title=f"titulo numero {i}",
-            url=f"url numero {i}",
-            website_id=100,
-            web_data=f"text numero {i}",
-        ).dict()
-        for i in range(inicio, inicio + 10)
-    ]
-    print(new_articles)
-    update_articles(new_articles, website_id=100)
-    return new_articles
-
-
-def get_new_news(new_articles):
-    with Session() as session:
-        session.execute(text("DROP FROM article_temp_table;"))
-        session.execute(
-            text(
-                """INSERT INTO article_temp_table (title, url, published, website_id, web_data)
-                VALUES(:title, :url, :published, :website_id, :web_data)"""
-            )
-        )
 
 
 def update_articles(new_articles, website_id):

@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from readability import Document
 
 
-async def get_text_article(url):
+async def get_text_article(url: str) -> str:
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             doc = Document(await response.text())

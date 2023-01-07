@@ -11,7 +11,7 @@ def remove_tags(html):
     return soup.get_text(" ", strip=True, types=("p")).strip()[:256]
 
 
-def get_news_rss(url: str):
+def get_news_rss(url: str) -> dict:
     d = feedparser.parse(url)
     print(d.version)
     channel = d.feed
