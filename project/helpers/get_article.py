@@ -7,7 +7,7 @@ async def get_text_article(url: str) -> str:
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             doc = Document(await response.text())
-            title = doc.title()
+            # title = doc.title()
             simple_html = doc.summary()
             soup = BeautifulSoup(simple_html, "html.parser")
 
@@ -21,7 +21,6 @@ async def get_text_article(url: str) -> str:
 if __name__ == "main":
     import asyncio
 
-    url = "https://elchapuzasinformatico.com/2022/12/microsoft-valora-lanzar-un-xbox-game-pass-de-bajo-coste-con-publicidad/"
+    URL = "https://www.python.org/downloads/release/python-3110/"
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(get_text_article(url))
-    print(get_text_article(url))
+    loop.run_until_complete(get_text_article(URL))

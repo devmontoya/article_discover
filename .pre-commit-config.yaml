@@ -46,3 +46,18 @@ repos:
     hooks:
       - id: flake8
         verbose: true
+
+# https://pylint.pycqa.org/en/latest/user_guide/installation/pre-commit-integration.html
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+            "--max-line-length=240",
+          ]

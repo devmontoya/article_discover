@@ -23,17 +23,17 @@ def get_news_rss(url: str) -> dict:
         "image_url": (channel["image"]["url"] if channel.has_key("image") else None),
     }
 
-    content_str = "content"
-    if (entries[0]).has_key("content"):
-        pass
-    elif (entries[0]).has_key("dc_content"):
-        content_str = "dc_content"
-    elif (entries[0]).has_key("description"):
-        content_str = "description"
-    elif (entries[0]).has_key("summary"):
-        content_str = "summary"
-    else:
-        raise Exception("no tiene ninguna de las keys disponibles")
+    # content_str = "content"
+    # if (entries[0]).has_key("content"):
+    #     pass
+    # elif (entries[0]).has_key("dc_content"):
+    #     content_str = "dc_content"
+    # elif (entries[0]).has_key("description"):
+    #     content_str = "description"
+    # elif (entries[0]).has_key("summary"):
+    #     content_str = "summary"
+    # else:
+    #     raise Exception("no tiene ninguna de las keys disponibles")
 
     published_str = "published"
     if (entries[0]).has_key("published"):
@@ -68,14 +68,17 @@ def get_news_rss(url: str) -> dict:
 
 
 if __name__ == "__main__":
-    myurl = "https://www.tomshardware.com/feeds/all"
-    myurl = "https://elchapuzasinformatico.com/feed/"
-    myurl = "https://www.phoronix.com/rss.php"
-    myurl = "https://feeds.feedburner.com/Hardwaresfera"
-    myurl = "https://www.genbeta.com/feedburner.xml"
-    myurl = "https://wccftech.com/feed/"
-    myurl = "https://www.popsci.com/feed"
-    print(get_news_rss(myurl))
+    MYURLS = [
+        "https://www.tomshardware.com/feeds/all",
+        "https://elchapuzasinformatico.com/feed/",
+        "https://www.phoronix.com/rss.php",
+        "https://feeds.feedburner.com/Hardwaresfera",
+        "https://www.genbeta.com/feedburner.xml",
+        "https://wccftech.com/feed/",
+        "https://www.popsci.com/feed",
+    ]
+    for url_feed in MYURLS:
+        print(get_news_rss(url_feed))
 
 
 # d.get(key, "empty")

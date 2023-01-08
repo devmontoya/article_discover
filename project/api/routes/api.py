@@ -99,7 +99,7 @@ async def update_sites():
         for web in websites:
             result = []
             articles = get_news_rss(web.url_feed)["entries"]
-            mask_articles = get_new_articles_helper(session, articles, web)
+            mask_articles = get_new_articles_helper(articles, web)
             for i, article in enumerate(articles[:5]):
                 website_id = web.id
                 url = article["link"]
