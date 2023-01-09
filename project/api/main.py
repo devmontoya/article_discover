@@ -58,23 +58,15 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse, tags=["WebSite"])
 async def home(request: Request):
-    num = 2
-    with Session() as session:
-        website_list = session.scalars(select(WebSite)).all()
-        website = WebSiteDb.get_element_with_filter(
-            session, Filter(column="id", value=num)
-        )
-        if website is not None:
-            articles = ArticleDb.get_all_elements_with_filter(
-                session, Filter(column="website_id", value=website.id)
-            )
-            lista = articles
-        else:
-            lista = []
     return templates.TemplateResponse(
-        "invited_user_view.html",
-        {"request": request, "num": num, "website_list": website_list, "lista": lista},
+        "home_page.html",
+        {"request": request},
     )
+
+
+@app.get("/invited_user_view.html", response_class=HTMLResponse, tags=["WebSite"])
+async def news_view(request: Request):
+    return templates.TemplateResponse("invited_user_view.html", {"request": request})
 
 
 @app.get("/news_view.html", response_class=HTMLResponse, tags=["WebSite"])

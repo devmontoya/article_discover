@@ -175,3 +175,30 @@ h3 {
 .div-news-info h6 {
   color: blue;
 }
+
+#login_user_div{
+  position: relative;
+  border: 1px solid gray;
+  height: 200px;
+  width: 300px;
+  margin: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  color: black;
+  text-decoration: none;
+}
+
+#button-invited {
+  position: relative;
+  border: 1px solid gray;
+  height: 50px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  color: black;
+  text-decoration: none;
+}
