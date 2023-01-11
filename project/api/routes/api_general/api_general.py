@@ -1,12 +1,13 @@
 from database.base_connection import Session
 from database.db_service import WebSiteDb
-from database.models.tables import Article, WebSite
+from database.models.tables import WebSite
 from fastapi import APIRouter, HTTPException, status
 from helpers.get_article import get_text_article
 from helpers.get_new_news import get_new_articles_helper
 from helpers.get_urls_rss import get_news_rss
 from schemas.base import Article_schema_noid, Filter, NewWebSite
 from sqlalchemy import select, text
+from api.routes.utils import getwrite_article_content, prepare_url
 
 api_router = APIRouter()
 
@@ -26,39 +27,23 @@ async def add_new_website(website: NewWebSite):
             WebSiteDb.get_element_with_filter(
                 session, Filter(column="name", value=title_feed)
             )
-            is None
+            is not None
         ):
-            new_website = WebSite(
-                name=title_feed,
-                url=website_info["link"],
-                url_feed=website.url,
-                image_url=website_info["image_url"],
-            )
-            session.add(new_website)
-            session.flush()
-            new_articles = []
-            articles = get_news_rss(website.url)["entries"]
-            for article in articles[:5]:
-                website_id = new_website.id
-                url = article["link"]
-                content = await get_text_article(url)
-                new_articles.append(
-                    Article(
-                        title=article["title"],
-                        url=url,
-                        published=article["published"],
-                        website_id=website_id,
-                        web_data=content,
-                    )
-                )
-            print(new_articles)
-            session.add_all(new_articles)
-            session.flush()
-            session.commit()
-        else:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT, detail="This feed already exists"
             )
+        website_feed = website.url
+        new_website = WebSite(
+            name=title_feed,
+            url=prepare_url(website_info, website_feed),
+            url_feed=website_feed,
+            image_url=website_info["image_url"],
+        )
+        session.add(new_website)
+        session.flush()
+        articles = website_info["entries"]
+        await getwrite_article_content(session, articles, new_website.id)
+        session.commit()
 
     return articles
 

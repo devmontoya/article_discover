@@ -1,5 +1,4 @@
-# from config import settings
-from api.routes import api
+from api.routes.api_general import api_general
 from database.base_connection import Session, create_metadata, init_database
 from database.db_service import ArticleDb, WebSiteDb
 from database.models.tables import WebSite
@@ -29,7 +28,7 @@ tags_metadata = [
 
 app = FastAPI(openapi_tags=tags_metadata)
 
-app.include_router(api.api_router, prefix="/api", tags=["API"])
+app.include_router(api_general.api_router, prefix="/api", tags=["API"])
 
 origins = [
     "http://localhost",
@@ -65,8 +64,18 @@ async def home(request: Request):
 
 
 @app.get("/invited_user_view.html", response_class=HTMLResponse, tags=["WebSite"])
-async def news_view(request: Request):
-    return templates.TemplateResponse("invited_user_view.html", {"request": request})
+async def invited_user_view(request: Request):
+    return templates.TemplateResponse(
+        "invited_user_view.html", {"request": request}
+    )
+
+
+@app.post("/registered_user_view.html", response_class=HTMLResponse, tags=["WebSite"])
+async def registered_user_view(request: Request):
+    return templates.TemplateResponse(
+        "registered_user_view.html",
+        {"request": request}
+    )
 
 
 @app.get("/news_view.html", response_class=HTMLResponse, tags=["WebSite"])

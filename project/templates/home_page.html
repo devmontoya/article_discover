@@ -9,10 +9,11 @@
 	<div id="mainblock">
 		<div id="maintext">
 			<h3> </h3>
-			<p>Do you have an account?<br>You can use any unique numeric identifier as email (a real authentication service has not been implemented yet).</p>
+			<p>Do you have an account?<br>You can use any unique numeric identifier as email (a real authentication service
+				has not been implemented yet).</p>
 		</div>
 		<div id="login_user_div">
-			<form action="/invited_user_view.html" id="form-login">
+			<form action="/registered_user_view.html" method="post" id="form-login">
 				<label for="email">Email:</label><br>
 				<input type="text" id="email" name="email"><br>
 				<label for="password">Password:</label><br>
@@ -21,7 +22,9 @@
 			</form>
 		</div>
 		<div id="invited_user_div">
-			<a id="button-invited" title="Go to invited page" href="invited_user_view.html"><h3>Invited User</h3></a>
+			<a id="button-invited" title="Go to invited page" href="invited_user_view.html">
+				<h3>Invited User</h3>
+			</a>
 		</div>
 	</div>
 </div>
