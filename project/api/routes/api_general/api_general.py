@@ -1,24 +1,24 @@
+from api.routes.utils import getwrite_article_content, prepare_url
 from database.base_connection import Session
 from database.db_service import WebSiteDb
-from database.models.tables import WebSite
+from database.models.tables import User, UserWebsiteAssociation, WebSite
 from fastapi import APIRouter, HTTPException, status
 from helpers.get_article import get_text_article
 from helpers.get_new_news import get_new_articles_helper
 from helpers.get_urls_rss import get_news_rss
 from schemas.base import Article_schema_noid, Filter, NewWebSite
 from sqlalchemy import select, text
-from api.routes.utils import getwrite_article_content, prepare_url
 
-api_router = APIRouter()
+api_general_router = APIRouter()
 
 
-@api_router.post("/get_news_website")
+@api_general_router.post("/get_news_website")
 def get_news_website(website: NewWebSite):
     news = get_news_rss(website.url)
     return news
 
 
-@api_router.post("/add_new_website", status_code=status.HTTP_201_CREATED)
+@api_general_router.post("/add_new_website", status_code=status.HTTP_201_CREATED)
 async def add_new_website(website: NewWebSite):
     website_info = get_news_rss(website.url)
     title_feed = website_info["title_feed"]
@@ -41,6 +41,11 @@ async def add_new_website(website: NewWebSite):
         )
         session.add(new_website)
         session.flush()
+        # Creating User-Website relationship
+        user_website = UserWebsiteAssociation()
+        user_website.website = new_website
+        user = session.get(User, website.gen_id)  # Get User using id
+        user.websites.append(user_website)
         articles = website_info["entries"]
         await getwrite_article_content(session, articles, new_website.id)
         session.commit()
@@ -48,14 +53,14 @@ async def add_new_website(website: NewWebSite):
     return articles
 
 
-@api_router.get("/get_websites_list")
+@api_general_router.get("/get_websites_list")
 async def get_websites_list():
     with Session() as session:
         websites = session.scalars(select(WebSite)).all()
     return websites
 
 
-@api_router.get("/get_news_list/{website_id}")
+@api_general_router.get("/get_news_list/{website_id}")
 async def get_news_list(website_id: int):
     with Session() as session:
         website = WebSiteDb.get_element_by_id(session, website_id)
@@ -76,7 +81,7 @@ async def get_news_list(website_id: int):
     ]
 
 
-@api_router.post("/update_sites")
+@api_general_router.post("/update_sites")
 async def update_sites():
     with Session() as session:
         websites = session.scalars(select(WebSite)).all()

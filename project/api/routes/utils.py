@@ -1,12 +1,11 @@
-from helpers.get_urls_rss import get_news_rss
-from helpers.get_article import get_text_article
-from database.models.tables import Article
 from urllib.parse import urlparse
 
+from database.models.tables import Article
+from helpers.get_article import get_text_article
 
-async def getwrite_article_content(session, articles, new_website_id):
+
+async def getwrite_article_content(session, articles, new_website_id: int):
     new_articles = []
-
     for article in articles[:5]:
         website_id = new_website_id
         url = article["link"]
@@ -29,6 +28,6 @@ def prepare_url(website_info, website_feed):
 
     if len(url) > 50:
         return urlparse(url).netloc
-    elif url is None:
+    if url is None:
         return website_feed
     return url

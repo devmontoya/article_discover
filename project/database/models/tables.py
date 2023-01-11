@@ -1,17 +1,18 @@
 from typing import Optional
 
 from database.base_connection import Base
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
-class User(Base):
-    __tablename__ = "user_table"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    gen_id: Mapped[int] = mapped_column(unique=True)
+class UserWebsiteAssociation(Base):
+    __tablename__ = "user_website_association_table"
+    user_id: Mapped[int] = mapped_column(ForeignKey("user_table.id"), primary_key=True)
+    website_id: Mapped[int] = mapped_column(
+        ForeignKey("website_table.id"), primary_key=True
+    )
 
-    def __repr__(self) -> str:
-        return f"User(id={self.id!r}, genID={self.chat_id!r})"
+    website: Mapped["WebSite"] = relationship()
 
 
 class WebSite(Base):
@@ -26,6 +27,17 @@ class WebSite(Base):
 
     def __repr__(self) -> str:
         return f"WebSite(id={self.id!r}, name={self.name!r}, url={self.url!r}, url_feed={self.url_feed!r})"
+
+
+class User(Base):
+    __tablename__ = "user_table"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    gen_id: Mapped[int] = mapped_column(unique=True)
+
+    websites: Mapped[list["UserWebsiteAssociation"]] = relationship()
+
+    def __repr__(self) -> str:
+        return f"User(id={self.id!r}, genID={self.chat_id!r})"
 
 
 class Article(Base):
